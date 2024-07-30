@@ -1,0 +1,82 @@
+pipeline {
+
+  agent {
+    docker {
+      label 'docker-of-jenkins'
+      image 'gradle:7.6.4-jdk17'
+      args '-v /etc/pki/java/cacerts:/opt/java/openjdk/lib/security/cacerts:ro'
+    }
+  }
+ 
+  options {
+    gitLabConnection('Git_Itac')
+    gitlabBuilds(builds: ['Compilando', 'Analizando'])
+  }
+
+  triggers {
+    gitlab(
+      triggerOnPush: true,                             
+      triggerOnMergeRequest: true,                                 
+      triggerOpenMergeRequestOnPush: "never",
+      triggerOnNoteRequest: true,
+      noteRegex: "Jenkins please retry a build",
+      skipWorkInProgressMergeRequest: true,
+      ciSkip: true,
+      setBuildDescription: true,
+      addVoteOnMergeRequest: true,
+      addNoteOnMergeRequest: true,
+      branchFilterType: "NameBasedFilter",
+      includeBranchesSpec: "",
+      addCiMessage: true,
+      triggerToBranchDeleteRequest: false,
+      triggerOnlyIfNewCommitsPushed: true,
+      cancelPendingBuildsOnUpdate: true,   
+    )
+  }
+
+  environment {
+    SONAR_PROJECT_KEY = "ach_federado_services_ms-springboot-j11_federatedirectory_AY7O0xHhAvPotgmVX7rj"
+    SONAR_PROJECT_NAME = "FederateDirectory"
+    TEST_RESULTS_DIR = "**/build/test-results/test/TEST-*.xml"
+    JACOCO_TEST_REPORT = "**/build/reports/jacoco/test/jacocoTestReport.xml"
+  }
+
+  stages {
+    stage('Compilando') {
+      steps {
+        updateGitlabCommitStatus name: 'Compilando', state: 'running'
+          echo "Compilando el branch ${gitlabSourceBranch}"
+          sh './gradlew build'
+      }
+    }
+
+    stage('Analizando') {
+      steps {
+        updateGitlabCommitStatus name: 'Analizando', state: 'running'
+        withSonarQubeEnv('sonarqube') {
+          sh "gradle sonar -Dsonar.host.url=${env.SONAR_HOST_URL} -Dsonar.login=${env.SONAR_AUTH_TOKEN} -Dsonar.junit.reportPaths=${TEST_RESULTS_DIR} -Dsonar.coverage.jacoco.xmlReportPaths=${JACOCO_TEST_REPORT} -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName=${SONAR_PROJECT_NAME}" 
+        }  
+      }
+    }
+  }
+  post {
+    always {
+      cleanWs()
+      dir("${env.WORKSPACE}@script") {
+        deleteDir()
+      }
+    }  
+    failure {
+      updateGitlabCommitStatus name: 'Compilando', state: 'failed'
+      updateGitlabCommitStatus name: 'Analizando', state: 'failed'
+    }
+    success {
+      updateGitlabCommitStatus name: 'Compilando', state: 'success'
+      updateGitlabCommitStatus name: 'Analizando', state: 'success'
+    }
+    aborted {
+      updateGitlabCommitStatus name: 'Compilando', state: 'canceled'
+      updateGitlabCommitStatus name: 'Analizando', state: 'canceled'
+    }
+  }  
+}
