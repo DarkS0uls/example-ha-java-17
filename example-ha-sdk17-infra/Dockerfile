@@ -13,8 +13,8 @@ EXPOSE 8000
 
 RUN mkdir /app
 
-COPY --from=build /home/gradle/src/federate-directory-infra/build/libs/*SNAPSHOT.jar /app/spring-boot-application.jar
-COPY --from=build /home/gradle/src/federate-directory-infra/build/resources/main/keyClient.jks /app/keyClient.jks
+COPY --from=build /home/gradle/src/example-ha-sdk17-infra/build/libs/*SNAPSHOT.jar /app/spring-boot-application.jar
+COPY --from=build /home/gradle/src/example-ha-sdk17-infra/build/resources/main/keyClient.jks /app/keyClient.jks
 
 RUN apk update && apk upgrade --available && apk add --no-cache
 

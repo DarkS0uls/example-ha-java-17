@@ -56,13 +56,26 @@ public class UsersAdapter implements UsersPort {
     }
 
     @Override
-    public Mono<UsersDto> deleteUser(UsersDto usersDto) {
-        return null;
+    public Mono<Void> deleteUser(UsersDto usersDto) {
+        return Mono.fromRunnable(() -> usersRepository.delete(UsersMapper.dtoToEntity(usersDto)))
+                .doOnSuccess(m -> log.info("UsersAdapter.deleteUser,User deleted successfully, with id: {}, user name:{} and email:{}", usersDto.getId(), usersDto.getName(), usersDto.getEmail()))
+                .doOnError(e -> log.error("UsersAdapter.deleteUser,Error deleting user, with user name: {},email:{} and details:{}", usersDto.getName(), usersDto.getEmail(), e.getMessage()))
+                .onErrorResume(DataAccessException.class, e -> Mono.error(new CreateUserException(String.format("Error deleting user, with username:%s, email:%s, details:%s", usersDto.getName(), usersDto.getEmail(), e.getMessage()), e.getCause())))
+                .onErrorResume(SQLException.class, e -> Mono.error(new SQLException(String.format("Error deleting user, with username:%s, email:%s, details:%s", usersDto.getName(), usersDto.getEmail(), e.getMessage()), e.getCause())))
+                .onErrorResume(e -> Mono.error(new CreateUserException(String.format("Error deleting user, with username:%s, email:%s, details:%s", usersDto.getName(), usersDto.getEmail(), e.getMessage()), e.getCause())))
+                .then();
     }
 
     @Override
     public Mono<UsersDto> getUserById(Integer id) {
-        return null;
+        log.info("UsersAdapter.getUserById, with id: {}", id);
+        return Mono.just(usersRepository.findById(id))
+                .map(m -> m.isPresent() ? UsersMapper.entityToDto(m.get()) : new UsersDto())
+                .doOnSuccess(m -> log.info("UsersAdapter.getUserById,User found successfully, with id: {}, user name:{} and email:{}", m.getId(), m.getName(), m.getEmail()))
+                .doOnError(e -> log.error("UsersAdapter.getUserById,Error finding user, with id: {}, details:{}", id, e.getMessage()))
+                .onErrorResume(DataAccessException.class, e -> Mono.error(new CreateUserException(String.format("Error finding user, with id:%s, details:%s", id, e.getMessage()), e.getCause())))
+                .onErrorResume(SQLException.class, e1 -> Mono.error(new SQLException(String.format("Error finding user, with id:%s, details:%s", id, e1.getMessage()), e1.getCause())))
+                .onErrorResume(e -> Mono.error(new CreateUserException(String.format("Error finding user, with id:%s, details:%s", id, e.getMessage()), e.getCause())));
     }
 
     @Override

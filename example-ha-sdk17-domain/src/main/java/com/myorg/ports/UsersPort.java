@@ -12,7 +12,7 @@ public interface UsersPort {
 
     Mono<UsersDto> updateUser(UsersDto usersDto);
 
-    Mono<UsersDto> deleteUser(UsersDto usersDto);
+    Mono<Void> deleteUser(UsersDto usersDto);
 
     Mono<UsersDto> getUserById(Integer id);
 

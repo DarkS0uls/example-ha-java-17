@@ -15,14 +15,9 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
-git remote add origin https://git.itac.com.co/ach/federado/services/ms-springboot-j11/federatedirectory.git
-git branch -M main
-git push -uf origin main
 ```
 
 ## Integrate with your tools
-
-- [ ] [Set up project integrations](https://git.itac.com.co/ach/federado/services/ms-springboot-j11/federatedirectory/-/settings/integrations)
 
 ## Collaborate with your team
 

@@ -21,7 +21,7 @@ logging:
 
 spring:
   application:
-    name: "federate-directory-management"
+    name: "example-ha-sdk17"
   datasource:
     url: jdbc:postgresql://192.168.200.156/federate_directory_v2
     username: transversales
