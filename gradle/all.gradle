@@ -13,7 +13,7 @@ allprojects {
       testOutputDir file('build/classes/test')
     }
   }
-  group 'com.ach'
+  group 'com.myorg'
   version = rootProject.version
 
 }

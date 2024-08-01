@@ -1,6 +1,7 @@
 package com.myorg;
 
 import com.myorg.adapter.in.example.ExampleRestService;
+import com.myorg.adapter.in.users.create.CreateUserAdapter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -9,7 +10,8 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(
         basePackages = {"com.myorg.config"},
         basePackageClasses = {
-            ExampleRestService.class
+                ExampleRestService.class,
+                CreateUserAdapter.class
         }
 )
 

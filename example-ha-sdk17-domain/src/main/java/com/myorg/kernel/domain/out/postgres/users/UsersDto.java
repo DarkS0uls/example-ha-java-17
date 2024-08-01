@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -22,6 +23,6 @@ public class UsersDto implements Serializable {
     private String email;
     private String cellphone;
     private String status;
-    private Date createdDt;
-    private Date updateDt;
+    private LocalDateTime createdDt;
+    private LocalDateTime updateDt;
 }

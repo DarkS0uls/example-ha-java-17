@@ -1,5 +1,6 @@
 package com.myorg.handler.example;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myorg.adapter.in.error.mapper.ErrorResponseMapper;
 import com.myorg.adapter.in.util.GenericResponse;
@@ -21,7 +22,7 @@ public class ExampleHandler {
 
     private final ExampleUseCase useCase;
 
-    public Mono<ResponseEntity<GenericResponse>> execute(String messageUuid, String requestAppId) {
+    public Mono<ResponseEntity<GenericResponse>> execute(String messageUuid, String requestAppId){
         return Mono.just(useCase.execute( buildCommand(messageUuid,requestAppId))
                         .fold(
                                         ErrorResponseMapper::useCaseErrorToResponse,
@@ -29,13 +30,7 @@ public class ExampleHandler {
                                 )
                 )
                 .map(genericResponse -> {
-                    log.info("ExampleHandler.execute, response: {}", genericResponse);
-                    try{
-                        log.info("ExampleHandler.execute, response: {}", new ObjectMapper().writeValueAsString(genericResponse));
-                    }
-                    catch (Exception e) {
-                        log.error("Error in ExampleHandler.execute, response: {}", e.getMessage());
-                    }
+
                     return new ResponseBuilder().mapResponseBuilder(genericResponse, HttpStatus.OK);
 
                 })

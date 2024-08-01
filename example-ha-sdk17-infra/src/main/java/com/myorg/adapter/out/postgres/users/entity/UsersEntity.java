@@ -9,6 +9,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -49,7 +50,7 @@ public class UsersEntity implements Serializable {
     private UsersStatusEnum status;
 
     @Column(name = "created_dt", nullable = false)
-    private Date createdDt;
+    private LocalDateTime createdDt;
     @Column(name = "update_dt", nullable = false)
-    private Date updateDt;
+    private LocalDateTime updateDt;
 }

@@ -1,5 +1,6 @@
 package com.myorg.config;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.myorg.adapter.in.error.ErrorResponse;
 import com.myorg.adapter.in.error.ErrorResponseError;
 import com.myorg.adapter.in.util.HeaderObjectResponse;
@@ -11,6 +12,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -70,6 +72,26 @@ public class ServiceExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     //--------------------------------------------------------------------------------------------------------------------
+
+    @ExceptionHandler(JsonProcessingException.class)
+    protected ResponseEntity<Object> jsonProcessingException(
+            JsonProcessingException ex) {
+        return responseBuilder(HttpStatus.BAD_REQUEST,
+                getHeader(MESSAGE_UUID),
+                getHeader(REQUEST_APP_ID),
+                GenericResponseCodes.INCONSISTENCIA_DATOS,
+                simpleErrorToList(ex.getCause().toString(), HttpStatus.BAD_REQUEST));
+    }
+
+    @ExceptionHandler(ArgumentConversionException.class)
+    protected ResponseEntity<Object> argumentConversionException(
+            ArgumentConversionException ex) {
+        return responseBuilder(HttpStatus.BAD_REQUEST,
+                getHeader(MESSAGE_UUID),
+                getHeader(REQUEST_APP_ID),
+                GenericResponseCodes.INCONSISTENCIA_DATOS,
+                simpleErrorToList(ex.getCause().toString(), HttpStatus.BAD_REQUEST));
+    }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     protected ResponseEntity<Object> numericViolationException(

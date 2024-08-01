@@ -1,6 +1,8 @@
 package com.myorg.config;
 
+import com.myorg.ports.UsersPort;
 import com.myorg.service.time.TimeManagerService;
+import com.myorg.service.users.UsersMangerService;
 import com.myorg.service.uuid.UuidManagerService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +20,10 @@ public class ServicesConfig {
         return new UuidManagerService();
     }
 
+    @Bean
+    public UsersMangerService usersMangerService(final UsersPort usersPort) {
+        return new UsersMangerService(usersPort);
+    }
 
 
 }
