@@ -1,32 +1,28 @@
-package com.myorg.handler.users.create.mapper;
+package com.myorg.handler.users.getbyid.mapper;
 
-import com.myorg.adapter.in.users.create.dto.CreateUserRequest;
 import com.myorg.adapter.in.users.create.dto.CreateUserResponse;
+import com.myorg.adapter.in.users.getbyid.dto.GetUserByIdResponse;
 import com.myorg.adapter.in.util.GenericUserResponseData;
 import com.myorg.adapter.in.util.HeaderObjectResponse;
 import com.myorg.adapter.in.util.MessageObjectResponse;
-import com.myorg.kernel.command.users.CreateUserCommand;
-import com.myorg.kernel.domain.in.users.create.CreateUserInformation;
+import com.myorg.kernel.command.users.GetUSerByIdCommand;
+import com.myorg.kernel.domain.in.users.getbyid.GetUserByIdInformation;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class CreateUserMapper {
-    public static CreateUserCommand requestToCommand(String messageUuid, String requestAppId, CreateUserRequest request) {
-        return CreateUserCommand
+public class GetUserByIdMapper {
+
+    public static GetUSerByIdCommand requestToCommand(String messageUuid, String requestAppId, String uuid) {
+        return GetUSerByIdCommand
                 .builder()
                 .messageUuid(messageUuid)
                 .requestAppId(requestAppId)
-                .userName(request.getUserName())
-                .secondName(request.getSecondName())
-                .lastName(request.getLastName())
-                .email(request.getEmail())
-                .cellphone(request.getCellphone())
-                .status(request.getStatus())
+                .uuid(uuid)
                 .build();
     }
 
-    public static CreateUserResponse informationToResponse(CreateUserInformation information) {
-        return CreateUserResponse
+    public static GetUserByIdResponse informationToResponse(GetUserByIdInformation information) {
+        return GetUserByIdResponse
                 .builder()
                 .headers(
                         HeaderObjectResponse
@@ -61,6 +57,7 @@ public class CreateUserMapper {
                                 .build()
                 )
                 .build();
+
     }
 
 }

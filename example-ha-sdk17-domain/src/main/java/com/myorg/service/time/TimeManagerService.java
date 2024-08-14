@@ -29,6 +29,14 @@ public class TimeManagerService implements Serializable {
         formatter.withZone(TimeZone.getTimeZone(TIME_ZONE).toZoneId());
         return localDateTime.format(formatter);
     }
+    public LocalDateTime getLocalDateTimeIsoFormat(String localDateTime){
+        if(localDateTime==null){
+            return null;
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+        formatter.withZone(TimeZone.getTimeZone(TIME_ZONE).toZoneId());
+        return LocalDateTime.parse(localDateTime,formatter);
+    }
 
     public LocalDateTime getLocalDateTime(){
         return LocalDateTime.now();

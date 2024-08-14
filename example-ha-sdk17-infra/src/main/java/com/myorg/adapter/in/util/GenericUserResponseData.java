@@ -1,6 +1,5 @@
-package com.myorg.kernel.domain.in.users.create;
+package com.myorg.adapter.in.util;
 
-import com.myorg.kernel.domain.util.InformationPayload;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +11,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class CreateUserInformationPayload implements Serializable, InformationPayload {
+public class GenericUserResponseData implements Serializable {
 
     private String uuid;
     private String userName;
@@ -23,5 +22,6 @@ public class CreateUserInformationPayload implements Serializable, InformationPa
     private String status;
     private String createDt;
     private String updateDt;
+
 
 }

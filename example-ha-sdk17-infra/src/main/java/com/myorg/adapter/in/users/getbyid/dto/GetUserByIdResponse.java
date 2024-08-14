@@ -1,4 +1,4 @@
-package com.myorg.adapter.in.users.create.dto;
+package com.myorg.adapter.in.users.getbyid.dto;
 
 import com.myorg.adapter.in.util.GenericResponse;
 import com.myorg.adapter.in.util.GenericUserResponseData;
@@ -10,12 +10,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-
 @Builder
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateUserResponse implements Serializable, GenericResponse {
+public class GetUserByIdResponse implements Serializable, GenericResponse {
     private HeaderObjectResponse headers;
     private MessageObjectResponse messageResponse;
     private GenericUserResponseData data;

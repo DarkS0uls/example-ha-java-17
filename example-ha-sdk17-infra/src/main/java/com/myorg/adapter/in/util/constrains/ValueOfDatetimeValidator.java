@@ -10,10 +10,15 @@ import java.util.TimeZone;
 
 @Slf4j
 public class ValueOfDatetimeValidator implements ConstraintValidator<ValueOfDatetime, String> {
-    private static final String ISO_FORMAT = "yyyy-MM-ddTHH:mm:ss";
+    private static final String ISO_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
     @Override
     public boolean isValid(String datetime, ConstraintValidatorContext constraintValidatorContext) {
+        if (datetime == null){
+            return true;
+        }
+
+        log.info("Validating datetime: {}", datetime);
         TimeZone timeZone = TimeZone.getTimeZone("UTC");
         DateFormat dateFormat = new SimpleDateFormat(ISO_FORMAT);
         dateFormat.setTimeZone(timeZone);

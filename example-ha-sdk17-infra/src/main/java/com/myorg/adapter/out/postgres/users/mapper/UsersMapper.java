@@ -48,9 +48,24 @@ public class UsersMapper {
         return UsersMassiveDto
                 .builder()
                 .users(
-                        page.get().toList()
+                        page.toList()
                                 .stream()
-                                .map(UsersMapper::entityToDto)
+                                .map(entity->
+                                        UsersDto
+                                                .builder()
+                                                .id(entity.getId())
+                                                .uuid(entity.getUuid())
+                                                .name(entity.getName())
+                                                .secondName(entity.getSecondName())
+                                                .lastname(entity.getLastname())
+                                                .email(entity.getEmail())
+                                                .cellphone(entity.getCellphone())
+                                                .status(entity.getStatus().name())
+                                                .createdDt(entity.getCreatedDt())
+                                                .updateDt(entity.getUpdateDt())
+                                                .build()
+
+                                )
                                 .collect(Collectors.toList())
                 )
                 .pagination(

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class PortConfig {
 
-
     @Bean
     public UsersPort getUserPort() {
         return new UsersAdapter();
