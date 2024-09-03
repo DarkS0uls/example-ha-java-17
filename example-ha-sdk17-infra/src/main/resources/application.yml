@@ -20,6 +20,7 @@ logging:
     console: '%d{yyyy-MM-dd HH:mm:ss.SSS} |level=%5p |class=%class{15}.%L | msg="%.-50000m"%n'
 
 spring:
+
   application:
     name: "example-ha-sdk17"
   datasource:
@@ -38,6 +39,34 @@ spring:
         default_schema: public
         jdbc:
           time_zone: UTC
+cloud:
+  aws:
+    stack:
+      auto: false
+    region:
+      static: "us-east-1"
+    accounts:
+      digital:
+        dynamodb-role: "arn:aws:iam::848155883266:role/cross-account-pse-cashout-xbc-role-sand"
+        dynamodb-session-name: "digital-dynamodb-session"
+    dynamodb:
+      endpoint: "http://localhost:4000"
+    sqs:
+      cross-account-role: "arn:aws:iam::848155883266:role/cross-account-pse-cashout-xbc-role-sand"
+      cross-account-session-name: "digital-sqs-session"
+      end-point: http://localhost:4000
+      listeners:
+        application-events: http://localhost:4000/000000000000/pseclosingtransaction
+      queue:
+        close-transaction: http://localhost:4000/000000000000/pseclosingtransaction
+        client-alerts: http://localhost:4000/000000000000/clientalertsv2
+
+    redis:
+      project-name: PSE
+      host: localhost
+      port: 7000
+
+
 my-vars:
   clientId: "some-micro"
   projectVersion: "1.0.0"

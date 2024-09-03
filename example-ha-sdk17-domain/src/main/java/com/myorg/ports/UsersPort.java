@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 public interface UsersPort {
 
     Mono<UsersDto> createUser(UsersDto usersDto);
+    //Transaccion1 --> FluentD
+    //Collector-->Dynamo, **Postgres**, s3
 
     Mono<UsersDto> updateUser(UsersDto usersDto);
 

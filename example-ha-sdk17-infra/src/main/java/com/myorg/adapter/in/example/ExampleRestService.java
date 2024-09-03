@@ -1,7 +1,10 @@
 package com.myorg.adapter.in.example;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myorg.adapter.in.util.GenericResponse;
 import com.myorg.handler.example.ExampleHandler;
+import com.myorg.kernel.domain.out.dynamo.TransactionDto;
+import com.myorg.ports.TransactionPort;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +23,8 @@ public class ExampleRestService {
     // Current Service Path :/example
 
     private final ExampleHandler handler;
+
+    private final TransactionPort transactionPort;
     @GetMapping("/get-iso-date")
     public Mono<ResponseEntity<GenericResponse>> getIsoDate(
             @NotEmpty(message = "message-uuid cannot be empty")
@@ -28,6 +33,16 @@ public class ExampleRestService {
             @RequestHeader("request-app-id") String requestAppId
     ) {
         log.info("ExampleRestService.getIsoDate, get iso date");
+        //proceso temporal
+        try {
+            String uuid="97e9a750-676c-489b-b27d-a16f8b8b3d6a";
+            TransactionDto data=transactionPort.searchByKey(uuid).block();
+            log.info("ExampleRestService.getIsoDate, data: {}", new ObjectMapper().writeValueAsString(data));
+        }catch (Exception e){
+            log.error("ExampleRestService.getIsoDate, error: {}", e.getMessage());
+        }
+        // end proceso temporal
         return handler.execute(messageUuid, requestAppId);
+
     }
 }
