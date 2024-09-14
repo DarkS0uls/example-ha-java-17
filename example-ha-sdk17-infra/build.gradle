@@ -73,7 +73,9 @@ dependencies {
 
 
     //redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'redis.clients:jedis:3.1.0'
+
 
     // Security
     implementation 'org.springframework.security:spring-security-core:6.2.4'

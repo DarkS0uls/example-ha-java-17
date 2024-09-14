@@ -2,8 +2,11 @@ package com.myorg.adapter.in.example;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myorg.adapter.in.util.GenericResponse;
+import com.myorg.adapter.out.redis.RedisAdapter;
 import com.myorg.handler.example.ExampleHandler;
 import com.myorg.kernel.domain.out.dynamo.TransactionDto;
+import com.myorg.kernel.domain.out.redis.RedisDto;
+import com.myorg.ports.RedisPort;
 import com.myorg.ports.TransactionPort;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +28,11 @@ public class ExampleRestService {
     private final ExampleHandler handler;
 
     private final TransactionPort transactionPort;
+
+    private final RedisPort redisPort;
+
     @GetMapping("/get-iso-date")
-    public Mono<ResponseEntity<GenericResponse>> getIsoDate(
+    public Mono<ResponseEntity<String>> getIsoDate(
             @NotEmpty(message = "message-uuid cannot be empty")
             @RequestHeader("message-uuid")  String messageUuid,
             @NotEmpty(message = "request-app-id cannot be empty")
@@ -35,14 +41,26 @@ public class ExampleRestService {
         log.info("ExampleRestService.getIsoDate, get iso date");
         //proceso temporal
         try {
-            String uuid="97e9a750-676c-489b-b27d-a16f8b8b3d6a";
-            TransactionDto data=transactionPort.searchByKey(uuid).block();
-            log.info("ExampleRestService.getIsoDate, data: {}", new ObjectMapper().writeValueAsString(data));
+          //Cosntruimos el objeto a crear
+            RedisDto redisDto = RedisDto.builder()
+                    .id("1")
+                    .name("name")
+                    .email("email")
+                    .build();
+            //Guardamos el objeto en redis
+            RedisDto response= redisPort.save(redisDto).block();
+
+            //Obtenemos el objeto guardado en redis
+            RedisDto response2= redisPort.findById("1").block();
+
+            log.info("ExampleRestService.getIsoDate, response: {}", new ObjectMapper().writeValueAsString(response2));
+
         }catch (Exception e){
-            log.error("ExampleRestService.getIsoDate, error: {}", e.getMessage());
+          log.error("Error in ExampleRestService.getIsoDate, error: {}", e.getMessage());
         }
         // end proceso temporal
-        return handler.execute(messageUuid, requestAppId);
+        //return handler.execute(messageUuid, requestAppId);
+        return Mono.just(ResponseEntity.ok("Hello World"));
 
     }
 }
